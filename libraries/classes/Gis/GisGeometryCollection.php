@@ -20,8 +20,8 @@ use function str_split;
  */
 class GisGeometryCollection extends GisGeometry
 {
-    // Hold the singleton instance of the class
-    private static $_instance;
+    /** @var self */
+    private static $instance;
 
     /**
      * A private constructor; prevents direct creation of object.
@@ -41,11 +41,11 @@ class GisGeometryCollection extends GisGeometry
      */
     public static function singleton()
     {
-        if (! isset(self::$_instance)) {
-            self::$_instance = new GisGeometryCollection();
+        if (! isset(self::$instance)) {
+            self::$instance = new GisGeometryCollection();
         }
 
-        return self::$_instance;
+        return self::$instance;
     }
 
     /**
@@ -263,7 +263,7 @@ class GisGeometryCollection extends GisGeometry
      * @param string $spatial    GIS GEOMETRYCOLLECTION object
      * @param int    $srid       spatial reference ID
      * @param string $label      label for the GIS GEOMETRYCOLLECTION object
-     * @param string $color      color for the GIS GEOMETRYCOLLECTION object
+     * @param array  $color      color for the GIS GEOMETRYCOLLECTION object
      * @param array  $scale_data array containing data related to scaling
      *
      * @return string JavaScript related to a row in the GIS dataset
