@@ -9,8 +9,8 @@ namespace PhpMyAdmin;
 
 use PhpMyAdmin\Charsets\Charset;
 use PhpMyAdmin\Charsets\Collation;
-use PhpMyAdmin\Html\Generator;
 use function array_unique;
+use function bin2hex;
 use function ceil;
 use function count;
 use function explode;
@@ -235,20 +235,6 @@ class CentralColumns
     }
 
     /**
-     * return error message to be displayed if central columns
-     * configuration storage is not completely configured
-     */
-    private function configErrorMessage(): Message
-    {
-        return Message::error(
-            __(
-                'The configuration storage is not ready for the central list'
-                . ' of columns feature.'
-            )
-        );
-    }
-
-    /**
      * build the insert query for central columns list given PMA storage
      * db, central_columns table, column name and corresponding definition to be added
      *
@@ -315,7 +301,9 @@ class CentralColumns
     ) {
         $cfgCentralColumns = $this->getParams();
         if (! is_array($cfgCentralColumns)) {
-            return $this->configErrorMessage();
+            return Message::error(
+                __('The configuration storage is not ready for the central list of columns feature.')
+            );
         }
         $db = $_POST['db'];
         $pmadb = $cfgCentralColumns['db'];
@@ -437,7 +425,9 @@ class CentralColumns
     ) {
         $cfgCentralColumns = $this->getParams();
         if (! is_array($cfgCentralColumns)) {
-            return $this->configErrorMessage();
+            return Message::error(
+                __('The configuration storage is not ready for the central list of columns feature.')
+            );
         }
         $pmadb = $cfgCentralColumns['db'];
         $central_list_table = $cfgCentralColumns['table'];
@@ -658,7 +648,9 @@ class CentralColumns
     ) {
         $cfgCentralColumns = $this->getParams();
         if (! is_array($cfgCentralColumns)) {
-            return $this->configErrorMessage();
+            return Message::error(
+                __('The configuration storage is not ready for the central list of columns feature.')
+            );
         }
         $centralTable = $cfgCentralColumns['table'];
         $this->dbi->selectDb($cfgCentralColumns['db'], DatabaseInterface::CONNECT_CONTROL);
@@ -741,19 +733,6 @@ class CentralColumns
     }
 
     /**
-     * Function generate and return the table header for
-     * multiple edit central columns page
-     *
-     * @param array $headers headers list
-     *
-     * @return string html for table header in central columns multi edit page
-     */
-    private function getEditTableHeader(array $headers): string
-    {
-        return $this->template->render('database/central_columns/edit_table_header', ['headers' => $headers]);
-    }
-
-    /**
      * build html for editing a row in central columns table
      *
      * @param array $row     array contains complete information of a
@@ -764,47 +743,10 @@ class CentralColumns
      */
     private function getHtmlForEditTableRow(array $row, int $row_num): string
     {
-        $tableHtml = '<tr>'
-            . '<input name="orig_col_name[' . $row_num . ']" type="hidden" '
-            . 'value="' . htmlspecialchars($row['col_name']) . '">'
-            . '<td name="col_name" class="nowrap">'
-            . $this->template->render('columns_definitions/column_name', [
-                'column_number' => $row_num,
-                'ci' => 0,
-                'ci_offset' => 0,
-                'column_meta' => [
-                    'Field' => $row['col_name'],
-                ],
-                'cfg_relation' => ['centralcolumnswork' => false],
-                'max_rows' => $this->maxRows,
-            ])
-            . '</td>';
-        $tableHtml .=
-            '<td name = "col_type" class="nowrap">'
-            . $this->template->render('columns_definitions/column_type', [
-                'column_number' => $row_num,
-                'ci' => 1,
-                'ci_offset' => 0,
-                'type_upper' => mb_strtoupper($row['col_type']),
-                'column_meta' => [],
-            ])
-            . '</td>';
-        $tableHtml .=
-            '<td class="nowrap" name="col_length">'
-            . $this->template->render('columns_definitions/column_length', [
-                'column_number' => $row_num,
-                'ci' => 2,
-                'ci_offset' => 0,
-                'length_values_input_size' => 8,
-                'length_to_display' => $row['col_length'],
-            ])
-            . '</td>';
         $meta = [];
         if (! isset($row['col_default']) || $row['col_default'] == '') {
             $meta['DefaultType'] = 'NONE';
-        } elseif ($row['col_default'] === 'CURRENT_TIMESTAMP'
-            || $row['col_default'] === 'current_timestamp()'
-        ) {
+        } elseif ($row['col_default'] === 'CURRENT_TIMESTAMP' || $row['col_default'] === 'current_timestamp()') {
             $meta['DefaultType'] = 'CURRENT_TIMESTAMP';
         } elseif ($row['col_default'] === 'NULL') {
             $meta['DefaultType'] = $row['col_default'];
@@ -812,77 +754,35 @@ class CentralColumns
             $meta['DefaultType'] = 'USER_DEFINED';
             $meta['DefaultValue'] = $row['col_default'];
         }
-        $tableHtml .=
-            '<td class="nowrap" name="col_default">'
-            . $this->template->render('columns_definitions/column_default', [
-                'column_number' => $row_num,
-                'ci' => 3,
-                'ci_offset' => 0,
-                'type_upper' => mb_strtoupper((string) $row['col_default']),
-                'column_meta' => $meta,
-                'char_editing' => $this->charEditing,
-            ])
-            . '</td>';
-        $tableHtml .= '<td name="collation" class="nowrap">';
-        $tableHtml .= '<select lang="en" dir="ltr" name="field_collation[' . $row_num . ']"';
-        $tableHtml .= ' id="field_' . $row_num . '_4">' . "\n";
-        $tableHtml .= '<option value=""></option>' . "\n";
+
+        $defaultValue = '';
+        $typeUpper = mb_strtoupper((string) $row['col_type']);
+
+        // For a TIMESTAMP, do not show the string "CURRENT_TIMESTAMP" as a default value
+        if (isset($meta['DefaultValue'])) {
+            $defaultValue = $meta['DefaultValue'];
+
+            if ($typeUpper === 'BIT') {
+                $defaultValue = Util::convertBitDefaultValue($meta['DefaultValue']);
+            } elseif ($typeUpper == 'BINARY' || $typeUpper == 'VARBINARY') {
+                $defaultValue = bin2hex($meta['DefaultValue']);
+            }
+        }
 
         $charsets = Charsets::getCharsets($this->dbi, $this->disableIs);
         $collations = Charsets::getCollations($this->dbi, $this->disableIs);
-        /** @var Charset $charset */
-        foreach ($charsets as $charset) {
-            $tableHtml .= '<optgroup label="' . $charset->getName()
-                . '" title="' . $charset->getDescription() . '">' . "\n";
-            /** @var Collation $collation */
-            foreach ($collations[$charset->getName()] as $collation) {
-                $tableHtml .= '<option value="' . $collation->getName()
-                    . '" title="' . $collation->getDescription() . '"'
-                    . ($row['col_collation'] == $collation->getName() ? ' selected' : '') . '>'
-                    . $collation->getName() . '</option>' . "\n";
-            }
-            $tableHtml .= '</optgroup>' . "\n";
-        }
-        $tableHtml .= '</select>' . "\n";
-        $tableHtml .= '</td>';
-        $tableHtml .=
-            '<td class="nowrap" name="col_attribute">'
-            . $this->template->render('columns_definitions/column_attribute', [
-                'column_number' => $row_num,
-                'ci' => 5,
-                'ci_offset' => 0,
-                'extracted_columnspec' => [
-                    'attribute' => $row['col_attribute'],
-                ],
-                'column_meta' => [],
-                'submit_attribute' => false,
-                'attribute_types' => $this->dbi->types->getAttributes(),
-            ])
-            . '</td>';
-        $tableHtml .=
-            '<td class="nowrap" name="col_isNull">'
-            . $this->template->render('columns_definitions/column_null', [
-                'column_number' => $row_num,
-                'ci' => 6,
-                'ci_offset' => 0,
-                'column_meta' => [
-                    'Null' => $row['col_isNull'],
-                ],
-            ])
-            . '</td>';
 
-        $tableHtml .=
-            '<td class="nowrap" name="col_extra">'
-            . $this->template->render('columns_definitions/column_extra', [
-                'column_number' => $row_num,
-                'ci' => 7,
-                'ci_offset' => 0,
-                'column_meta' => ['Extra' => $row['col_extra']],
-            ])
-            . '</td>';
-        $tableHtml .= '</tr>';
-
-        return $tableHtml;
+        return $this->template->render('database/central_columns/edit_table_row', [
+            'row_num' => $row_num,
+            'row' => $row,
+            'max_rows' => $this->maxRows,
+            'meta' => $meta,
+            'default_value' => $defaultValue,
+            'char_editing' => $this->charEditing,
+            'charsets' => $charsets,
+            'collations' => $collations,
+            'attribute_types' => $this->dbi->types->getAttributes(),
+        ]);
     }
 
     /**
@@ -936,49 +836,6 @@ class CentralColumns
     }
 
     /**
-     * Get HTML for "check all" check box with "with selected" dropdown
-     *
-     * @param string $themeImagePath pma theme image url
-     * @param string $text_dir       url for text directory
-     */
-    public function getTableFooter(string $themeImagePath, string $text_dir): string
-    {
-        $html_output = $this->template->render('select_all', [
-            'theme_image_path' => $themeImagePath,
-            'text_dir' => $text_dir,
-            'form_name' => 'tableslistcontainer',
-        ]);
-
-        $html_output .= '<button class="btn btn-link mult_submit change_central_columns" type="submit"'
-            . ' name="edit_central_columns" value="edit central columns"'
-            . ' title="' . __('Edit') . '">' . "\n"
-            . Generator::getIcon('b_edit', __('Edit'))
-            . '</button>' . "\n";
-
-        $html_output .= '<button class="btn btn-link mult_submit" type="submit"'
-            . ' name="delete_central_columns" value="remove_from_central_columns"'
-            . ' title="' . __('Delete') . '">' . "\n"
-            . Generator::getIcon('b_drop', __('Delete'))
-            . '</button>' . "\n";
-
-        return $html_output;
-    }
-
-    /**
-     * function generate and return the table footer for
-     * multiple edit central columns page
-     *
-     * @return string html for table footer in central columns multi edit page
-     */
-    private function getEditTableFooter(): string
-    {
-        return '<fieldset class="tblFooters">'
-            . '<input class="btn btn-primary" type="submit" '
-            . 'name="save_multi_central_column_edit" value="' . __('Save') . '">'
-            . '</fieldset>';
-    }
-
-    /**
      * Column `col_extra` is used to store both extra and attributes for a column.
      * This method separates them.
      *
@@ -1019,18 +876,7 @@ class CentralColumns
      */
     public function getHtmlForEditingPage(array $selected_fld, string $selected_db): string
     {
-        $html = '<form id="multi_edit_central_columns">';
-        $header_cells = [
-            __('Name'),
-            __('Type'),
-            __('Length/Values'),
-            __('Default'),
-            __('Collation'),
-            __('Attributes'),
-            __('Null'),
-            __('A_I'),
-        ];
-        $html .= $this->getEditTableHeader($header_cells);
+        $html = '';
         $selected_fld_safe = [];
         foreach ($selected_fld as $key) {
             $selected_fld_safe[] = $this->dbi->escapeString($key);
@@ -1047,9 +893,6 @@ class CentralColumns
             $html .= $tableHtmlRow;
             $row_num++;
         }
-        $html .= '</table>';
-        $html .= $this->getEditTableFooter();
-        $html .= '</form>';
 
         return $html;
     }
@@ -1093,38 +936,28 @@ class CentralColumns
     }
 
     /**
-     * build dropdown select html to select column in selected table,
-     * include only columns which are not already in central list
-     *
-     * @param string $db           current database to which selected table belongs
-     * @param string $selected_tbl selected table
-     *
-     * @return string html to select column
+     * @return string[]
      */
-    public function getHtmlForColumnDropdown($db, $selected_tbl)
+    public function getColumnsNotInCentralList(string $db, string $table): array
     {
-        $existing_cols = $this->getFromTable($db, $selected_tbl);
+        $existingColumns = $this->getFromTable($db, $table);
         $this->dbi->selectDb($db);
-        $columns = (array) $this->dbi->getColumnNames(
-            $db,
-            $selected_tbl
-        );
-        $selectColHtml = '';
-        foreach ($columns as $column) {
-            if (in_array($column, $existing_cols)) {
+        $columnNames = (array) $this->dbi->getColumnNames($db, $table);
+        $columns = [];
+
+        foreach ($columnNames as $column) {
+            if (in_array($column, $existingColumns)) {
                 continue;
             }
 
-            $selectColHtml .= '<option value="' . htmlspecialchars($column) . '">'
-                . htmlspecialchars($column)
-                . '</option>';
+            $columns[] = $column;
         }
 
-        return $selectColHtml;
+        return $columns;
     }
 
     /**
-     * build html for adding a new user defined column to central list
+     * Adding a new user defined column to central list
      *
      * @param string $db             current database
      * @param int    $total_rows     number of rows in central columns
@@ -1132,16 +965,15 @@ class CentralColumns
      * @param string $themeImagePath table footer theme image directorie
      * @param string $text_dir       table footer arrow direction
      *
-     * @return string html of the form to let user add a new user defined column to the
-     *                list
+     * @return array
      */
-    public function getHtmlForMain(
+    public function getTemplateVariablesForMain(
         string $db,
         int $total_rows,
         int $pos,
         string $themeImagePath,
         string $text_dir
-    ): string {
+    ): array {
         $max_rows = $this->maxRows;
         $attribute_types = $this->dbi->types->getAttributes();
 
@@ -1157,6 +989,7 @@ class CentralColumns
         $tables = $this->dbi->getTables($db);
         $rows_list = $this->getColumnsList($db, $pos, $max_rows);
 
+        $defaultValues = [];
         $rows_meta = [];
         $types_upper = [];
         $row_num = 0;
@@ -1164,19 +997,28 @@ class CentralColumns
             $rows_meta[$row_num] = [];
             if (! isset($row['col_default']) || $row['col_default'] == '') {
                 $rows_meta[$row_num]['DefaultType'] = 'NONE';
+            } elseif ($row['col_default'] === 'CURRENT_TIMESTAMP' || $row['col_default'] === 'current_timestamp()') {
+                $rows_meta[$row_num]['DefaultType'] = 'CURRENT_TIMESTAMP';
+            } elseif ($row['col_default'] == 'NULL') {
+                $rows_meta[$row_num]['DefaultType'] = $row['col_default'];
             } else {
-                if ($row['col_default'] === 'CURRENT_TIMESTAMP'
-                    || $row['col_default'] === 'current_timestamp()'
-                ) {
-                    $rows_meta[$row_num]['DefaultType'] = 'CURRENT_TIMESTAMP';
-                } elseif ($row['col_default'] === 'NULL') {
-                    $rows_meta[$row_num]['DefaultType'] = $row['col_default'];
-                } else {
-                    $rows_meta[$row_num]['DefaultType'] = 'USER_DEFINED';
-                    $rows_meta[$row_num]['DefaultValue'] = $row['col_default'];
-                }
+                $rows_meta[$row_num]['DefaultType'] = 'USER_DEFINED';
+                $rows_meta[$row_num]['DefaultValue'] = $row['col_default'];
             }
             $types_upper[$row_num] = mb_strtoupper((string) $row['col_type']);
+
+            // For a TIMESTAMP, do not show the string "CURRENT_TIMESTAMP" as a default value
+            $defaultValues[$row_num] = '';
+            if (isset($rows_meta[$row_num]['DefaultValue'])) {
+                $defaultValues[$row_num] = $rows_meta[$row_num]['DefaultValue'];
+
+                if ($types_upper[$row_num] === 'BIT') {
+                    $defaultValues[$row_num] = Util::convertBitDefaultValue($rows_meta[$row_num]['DefaultValue']);
+                } elseif ($types_upper[$row_num] === 'BINARY' || $types_upper[$row_num] === 'VARBINARY') {
+                    $defaultValues[$row_num] = bin2hex($rows_meta[$row_num]['DefaultValue']);
+                }
+            }
+
             $row_num++;
         }
 
@@ -1200,7 +1042,7 @@ class CentralColumns
             ];
         }
 
-        return $this->template->render('database/central_columns/main', [
+        return [
             'db' => $db,
             'total_rows' => $total_rows,
             'max_rows' => $max_rows,
@@ -1212,10 +1054,11 @@ class CentralColumns
             'tables' => $tables,
             'rows_list' => $rows_list,
             'rows_meta' => $rows_meta,
+            'default_values' => $defaultValues,
             'types_upper' => $types_upper,
             'theme_image_path' => $themeImagePath,
             'text_dir' => $text_dir,
             'charsets' => $charsetsList,
-        ]);
+        ];
     }
 }

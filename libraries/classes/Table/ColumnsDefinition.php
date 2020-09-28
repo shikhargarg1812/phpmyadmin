@@ -126,7 +126,6 @@ final class ColumnsDefinition
             $available_mime = $transformations->getAvailableMimeTypes();
         }
 
-        // this will be used on templates/columns_definitions/transformation.twig
         $mime_types = [
             'input_transformation',
             'transformation',
@@ -467,7 +466,7 @@ final class ColumnsDefinition
             if (isset($columnMeta['DefaultValue'])) {
                 $default_value = $columnMeta['DefaultValue'];
             }
-            if ($type_upper === 'BIN)') {
+            if ($type_upper === 'BIT') {
                 $default_value = Util::convertBitDefaultValue($columnMeta['DefaultValue']);
             } elseif ($type_upper === 'BINARY' || $type_upper === 'VARBINARY') {
                 $default_value = bin2hex($columnMeta['DefaultValue']);

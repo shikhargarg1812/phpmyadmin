@@ -311,32 +311,18 @@ class Util
     /**
      * returns array with tables of given db with extended information and grouped
      *
-     * @param string   $db           name of db
-     * @param string   $tables       name of tables
-     * @param int      $limit_offset list offset
-     * @param int|bool $limit_count  max tables to return
+     * @param string $db
      *
-     * @return array    (recursive) grouped table list
+     * @return array (recursive) grouped table list
      */
-    public static function getTableList(
-        $db,
-        $tables = null,
-        $limit_offset = 0,
-        $limit_count = false
-    ): array {
+    public static function getTableList($db): array
+    {
         $sep = $GLOBALS['cfg']['NavigationTreeTableSeparator'];
 
-        if ($tables === null) {
-            $tables = $GLOBALS['dbi']->getTablesFull(
-                $db,
-                '',
-                false,
-                $limit_offset,
-                $limit_count
-            );
-            if ($GLOBALS['cfg']['NaturalOrder']) {
-                uksort($tables, 'strnatcasecmp');
-            }
+        $tables = $GLOBALS['dbi']->getTablesFull($db);
+
+        if ($GLOBALS['cfg']['NaturalOrder']) {
+            uksort($tables, 'strnatcasecmp');
         }
 
         if (count($tables) < 1) {
@@ -3172,39 +3158,6 @@ class Util
     public static function isInteger($input): bool
     {
         return ctype_digit((string) $input);
-    }
-
-    /**
-     * Build titles and icons for action links
-     *
-     * @return array   the action titles
-     */
-    public static function buildActionTitles(): array
-    {
-        $titles = [];
-
-        $titles['Browse'] = Generator::getIcon('b_browse', __('Browse'));
-        $titles['NoBrowse'] = Generator::getIcon('bd_browse', __('Browse'));
-        $titles['Search'] = Generator::getIcon('b_select', __('Search'));
-        $titles['NoSearch'] = Generator::getIcon('bd_select', __('Search'));
-        $titles['Insert'] = Generator::getIcon('b_insrow', __('Insert'));
-        $titles['NoInsert'] = Generator::getIcon('bd_insrow', __('Insert'));
-        $titles['Structure'] = Generator::getIcon('b_props', __('Structure'));
-        $titles['Drop'] = Generator::getIcon('b_drop', __('Drop'));
-        $titles['NoDrop'] = Generator::getIcon('bd_drop', __('Drop'));
-        $titles['Empty'] = Generator::getIcon('b_empty', __('Empty'));
-        $titles['NoEmpty'] = Generator::getIcon('bd_empty', __('Empty'));
-        $titles['Edit'] = Generator::getIcon('b_edit', __('Edit'));
-        $titles['NoEdit'] = Generator::getIcon('bd_edit', __('Edit'));
-        $titles['Export'] = Generator::getIcon('b_export', __('Export'));
-        $titles['NoExport'] = Generator::getIcon('bd_export', __('Export'));
-        $titles['Execute'] = Generator::getIcon('b_nextpage', __('Execute'));
-        $titles['NoExecute'] = Generator::getIcon('bd_nextpage', __('Execute'));
-        // For Favorite/NoFavorite, we need icon only.
-        $titles['Favorite'] = Generator::getIcon('b_favorite', '');
-        $titles['NoFavorite'] = Generator::getIcon('b_no_favorite', '');
-
-        return $titles;
     }
 
     /**
