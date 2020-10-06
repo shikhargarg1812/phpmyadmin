@@ -178,7 +178,7 @@ class ZoomSearchController extends AbstractController
             // set column name
             $this->columnNames[] = $row['Field'];
 
-            $type = $row['Type'];
+            $type = (string) $row['Type'];
             // before any replacement
             $this->originalColumnTypes[] = mb_strtolower($type);
             // check whether table contains geometric columns
@@ -209,7 +209,7 @@ class ZoomSearchController extends AbstractController
                 = ! empty($row['Collation']) && $row['Collation'] !== 'NULL'
                 ? $row['Collation']
                 : '';
-        } // end for
+        }
 
         // Retrieve foreign keys
         $this->foreigners = $this->relation->getForeigners($this->db, $this->table);

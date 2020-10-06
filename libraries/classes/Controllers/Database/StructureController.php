@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin\Controllers\Database;
 
-use PhpMyAdmin\CentralColumns;
 use PhpMyAdmin\Charsets;
 use PhpMyAdmin\CheckUserPrivileges;
 use PhpMyAdmin\Common;
 use PhpMyAdmin\Config\PageSettings;
 use PhpMyAdmin\Core;
+use PhpMyAdmin\Database\CentralColumns;
 use PhpMyAdmin\DatabaseInterface;
 use PhpMyAdmin\Html\Generator;
 use PhpMyAdmin\Message;
@@ -1017,7 +1017,7 @@ class StructureController extends AbstractController
                     $formatted_size =  __('unknown');
                     $unit          =  '';
                 }
-        } // end switch
+        }
 
         if ($current_table['TABLE_TYPE'] === 'VIEW'
             || $current_table['TABLE_TYPE'] === 'SYSTEM VIEW'

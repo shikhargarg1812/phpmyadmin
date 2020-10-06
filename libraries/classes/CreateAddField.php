@@ -104,7 +104,7 @@ class CreateAddField
             );
             $previousField = $i;
             $definitions[] = $definition;
-        } // end for
+        }
 
         return $definitions;
     }
@@ -339,7 +339,7 @@ class CreateAddField
             $sqlStatement = implode(', ', $definitions);
         }
 
-        return preg_replace('@, $@', '', $sqlStatement);
+        return (string) preg_replace('@, $@', '', $sqlStatement);
     }
 
     /**

@@ -438,7 +438,7 @@ class ExportLatex extends ExportPlugin
         $GLOBALS['dbi']->freeResult($result);
 
         return true;
-    } // end getTableLaTeX
+    }
 
     /**
      * Outputs result raw query
@@ -663,7 +663,7 @@ class ExportLatex extends ExportPlugin
             }
             $local_buffer = self::texEscape($local_buffer);
             if ($row['Key'] === 'PRI') {
-                $pos = mb_strpos($local_buffer, "\000");
+                $pos = (int) mb_strpos($local_buffer, "\000");
                 $local_buffer = '\\textit{'
                     .
                     mb_substr($local_buffer, 0, $pos)
@@ -671,7 +671,7 @@ class ExportLatex extends ExportPlugin
                     mb_substr($local_buffer, $pos);
             }
             if (in_array($field_name, $unique_keys)) {
-                $pos = mb_strpos($local_buffer, "\000");
+                $pos = (int) mb_strpos($local_buffer, "\000");
                 $local_buffer = '\\textbf{'
                     .
                     mb_substr($local_buffer, 0, $pos)
@@ -684,12 +684,12 @@ class ExportLatex extends ExportPlugin
             if (! $this->export->outputHandler($buffer)) {
                 return false;
             }
-        } // end while
+        }
 
         $buffer = ' \\end{longtable}' . $crlf;
 
         return $this->export->outputHandler($buffer);
-    } // end of the 'exportStructure' method
+    }
 
     /**
      * Escapes some special characters for use in TeX/LaTeX

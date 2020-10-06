@@ -88,7 +88,13 @@ final class ReplaceController extends AbstractController
          */
         $goto_include = false;
 
-        $this->addScriptFiles(['makegrid.js', 'sql.js', 'indexes.js', 'gis_data_editor.js']);
+        $this->addScriptFiles([
+            'makegrid.js',
+            'vendor/stickyfill.min.js',
+            'sql.js',
+            'indexes.js',
+            'gis_data_editor.js',
+        ]);
 
         // check whether insert row mode, if so include /table/change
         $this->insertEdit->isInsertRow();
@@ -342,7 +348,7 @@ final class ReplaceController extends AbstractController
                 }
 
                 $multi_edit_columns[$key] = null;
-            } //end of foreach
+            }
 
             // temporarily store rows not inserted
             // so that they can be populated again.
@@ -525,7 +531,7 @@ final class ReplaceController extends AbstractController
                             $relation_field_value
                         );
                     }
-                }   // end of loop for each relation cell
+                }
             }
             if (isset($_POST['do_transformations'])
                 && $_POST['do_transformations'] == true
@@ -555,7 +561,7 @@ final class ReplaceController extends AbstractController
                             $type
                         );
                     }
-                }   // end of loop for each $mime_map
+                }
             }
 
             // Need to check the inline edited value can be truncated by MySQL

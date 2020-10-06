@@ -238,16 +238,12 @@ class Core
      * like a cookie or form.
      *
      * @param string $path The path to check
-     *
-     * @return string  The secured path
-     *
-     * @access public
      */
     public static function securePath(string $path): string
     {
         // change .. to .
-        return preg_replace('@\.\.*@', '.', $path);
-    } // end function
+        return (string) preg_replace('@\.\.*@', '.', $path);
+    }
 
     /**
      * displays the given error message on phpMyAdmin error page in foreign language,
@@ -275,7 +271,8 @@ class Core
          */
         if (isset($GLOBALS['dbi'], $GLOBALS['PMA_Config']) && $GLOBALS['dbi'] !== null
             && $GLOBALS['PMA_Config']->get('is_setup') === false
-            && Response::getInstance()->isAjax()) {
+            && Response::getInstance()->isAjax()
+        ) {
             $response = Response::getInstance();
             $response->setRequestStatus(false);
             $response->addJSON('message', Message::error($error_message));
@@ -434,12 +431,12 @@ class Core
             'k' =>          1024,
         ];
 
-        if (preg_match('/^([0-9]+)([KMGT])/i', $size, $matches)) {
+        if (preg_match('/^([0-9]+)([KMGT])/i', (string) $size, $matches)) {
             return (int) ($matches[1] * $binaryprefixes[$matches[2]]);
         }
 
         return (int) $size;
-    } // end getRealSize()
+    }
 
     /**
      * Checks given $page against given $allowList and returns true if valid
@@ -470,7 +467,7 @@ class Core
         $_page = mb_substr(
             $page,
             0,
-            mb_strpos($page . '?', '?')
+            (int) mb_strpos($page . '?', '?')
         );
         if (in_array($_page, $allowList)) {
             return true;
@@ -480,7 +477,7 @@ class Core
         $_page = mb_substr(
             $_page,
             0,
-            mb_strpos($_page . '?', '?')
+            (int) mb_strpos($_page . '?', '?')
         );
 
         return in_array($_page, $allowList);
@@ -507,13 +504,13 @@ class Core
         }
 
         if (getenv($var_name)) {
-            return getenv($var_name);
+            return (string) getenv($var_name);
         }
 
         if (function_exists('apache_getenv')
             && apache_getenv($var_name, true)
         ) {
-            return apache_getenv($var_name, true);
+            return (string) apache_getenv($var_name, true);
         }
 
         return '';
@@ -841,7 +838,7 @@ class Core
         $buffer = htmlspecialchars($buffer);
         $buffer = str_replace('  ', ' &nbsp;', $buffer);
 
-        return preg_replace("@((\015\012)|(\015)|(\012))@", '<br>' . "\n", $buffer);
+        return (string) preg_replace("@((\015\012)|(\015)|(\012))@", '<br>' . "\n", $buffer);
     }
 
     /**
@@ -1063,7 +1060,7 @@ class Core
 
         // We could not parse header
         return false;
-    } // end of the 'getIp()' function
+    }
 
     /**
      * Sanitizes MySQL hostname

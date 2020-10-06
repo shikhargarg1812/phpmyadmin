@@ -141,7 +141,7 @@ class SearchController extends AbstractController
             // set column name
             $this->columnNames[] = $row['Field'];
 
-            $type = $row['Type'];
+            $type = (string) $row['Type'];
             // before any replacement
             $this->originalColumnTypes[] = mb_strtolower($type);
             // check whether table contains geometric columns
@@ -172,7 +172,7 @@ class SearchController extends AbstractController
                 = ! empty($row['Collation']) && $row['Collation'] !== 'NULL'
                 ? $row['Collation']
                 : '';
-        } // end for
+        }
 
         // Retrieve foreign keys
         $this->foreigners = $this->relation->getForeigners($this->db, $this->table);
@@ -187,6 +187,7 @@ class SearchController extends AbstractController
 
         $this->addScriptFiles([
             'makegrid.js',
+            'vendor/stickyfill.min.js',
             'sql.js',
             'table/select.js',
             'table/change.js',

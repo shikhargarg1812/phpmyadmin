@@ -60,7 +60,7 @@ class ExportSql extends ExportPlugin
      *
      * @var bool
      */
-    private $sent_charset = false;
+    private $sentCharset = false;
 
     public function __construct()
     {
@@ -706,7 +706,7 @@ class ExportSql extends ExportPlugin
         }
 
         // restore connection settings
-        if ($this->sent_charset) {
+        if ($this->sentCharset) {
             $foot .= $crlf
                 . '/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;'
                 . $crlf
@@ -714,7 +714,7 @@ class ExportSql extends ExportPlugin
                 . $crlf
                 . '/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;'
                 . $crlf;
-            $this->sent_charset = false;
+            $this->sentCharset = false;
         }
 
         /* Restore timezone */
@@ -823,7 +823,7 @@ class ExportSql extends ExportPlugin
                 . '/*!40101 SET @OLD_COLLATION_CONNECTION='
                 . '@@COLLATION_CONNECTION */;' . $crlf
                 . '/*!40101 SET NAMES ' . $set_names . ' */;' . $crlf . $crlf;
-            $this->sent_charset = true;
+            $this->sentCharset = true;
         }
 
         return $this->export->outputHandler($head);
@@ -880,7 +880,7 @@ class ExportSql extends ExportPlugin
                 . mb_substr(
                     $collation,
                     0,
-                    mb_strpos($collation, '_')
+                    (int) mb_strpos($collation, '_')
                 )
                 . ' COLLATE ' . $collation;
         } else {
@@ -1914,7 +1914,7 @@ class ExportSql extends ExportPlugin
         Context::$MODE = $old_mode;
 
         return $warning . $schema_create . ($add_semicolon ? ';' . $crlf : '');
-    } // end of the 'getTableDef()' function
+    }
 
     /**
      * Returns $table's comments, relations etc.
@@ -2049,7 +2049,7 @@ class ExportSql extends ExportPlugin
         }
 
         return $schema_create;
-    } // end of the '_getTableComments()' function
+    }
 
     /**
      * Outputs a raw query
@@ -2246,7 +2246,7 @@ class ExportSql extends ExportPlugin
                     . $this->exportComment();
                 // export a stand-in definition to resolve view dependencies
                 $dump .= $this->getTableDefStandIn($db, $table, $crlf, $aliases);
-        } // end switch
+        }
 
         // this one is built by getTableDef() to use in table copy/move
         // but not in the case of export
@@ -2540,8 +2540,8 @@ class ExportSql extends ExportPlugin
                     $values[] = '\''
                         . $GLOBALS['dbi']->escapeString($row[$j])
                         . '\'';
-                } // end if
-            } // end for
+                }
+            }
 
             // should we make update?
             if (isset($GLOBALS['sql_type'])
@@ -2607,7 +2607,7 @@ class ExportSql extends ExportPlugin
             ) {
                 return false;
             }
-        } // end while
+        }
 
         if ($current_row > 0) {
             if (! $this->export->outputHandler(';' . $crlf)) {
@@ -2637,7 +2637,7 @@ class ExportSql extends ExportPlugin
         $GLOBALS['dbi']->freeResult($result);
 
         return true;
-    } // end of the 'exportData()' function
+    }
 
     /**
      * Make a create table statement compatible with MSSQL
@@ -2657,25 +2657,25 @@ class ExportSql extends ExportPlugin
         // 5. No KEY and INDEX inside CREATE TABLE
         // 6. DOUBLE field doesn't exists, we will use FLOAT instead
 
-        $create_query = preg_replace(
+        $create_query = (string) preg_replace(
             '/^CREATE TABLE IF NOT EXISTS/',
             'CREATE TABLE',
-            $create_query
+            (string) $create_query
         );
         // first we need  to replace all lines ended with '" DATE ...,\n'
         // last preg_replace preserve us from situation with date text
         // inside DEFAULT field value
-        $create_query = preg_replace(
+        $create_query = (string) preg_replace(
             "/\" date DEFAULT NULL(,)?\n/",
             '" datetime DEFAULT NULL$1' . "\n",
             $create_query
         );
-        $create_query = preg_replace(
+        $create_query = (string) preg_replace(
             "/\" date NOT NULL(,)?\n/",
             '" datetime NOT NULL$1' . "\n",
             $create_query
         );
-        $create_query = preg_replace(
+        $create_query = (string) preg_replace(
             '/" date NOT NULL DEFAULT \'([^\'])/',
             '" datetime NOT NULL DEFAULT \'$1',
             $create_query
@@ -2684,17 +2684,17 @@ class ExportSql extends ExportPlugin
         // next we need to replace all lines ended with ') UNSIGNED ...,'
         // last preg_replace preserve us from situation with unsigned text
         // inside DEFAULT field value
-        $create_query = preg_replace(
+        $create_query = (string) preg_replace(
             "/\) unsigned NOT NULL(,)?\n/",
             ') NOT NULL$1' . "\n",
             $create_query
         );
-        $create_query = preg_replace(
+        $create_query = (string) preg_replace(
             "/\) unsigned DEFAULT NULL(,)?\n/",
             ') DEFAULT NULL$1' . "\n",
             $create_query
         );
-        $create_query = preg_replace(
+        $create_query = (string) preg_replace(
             '/\) unsigned NOT NULL DEFAULT \'([^\'])/',
             ') NOT NULL DEFAULT \'$1',
             $create_query
@@ -2704,17 +2704,17 @@ class ExportSql extends ExportPlugin
         // '" INT|TINYINT([0-9]{1,}) ...,' last preg_replace preserve us
         // from situation with int([0-9]{1,}) text inside DEFAULT field
         // value
-        $create_query = preg_replace(
+        $create_query = (string) preg_replace(
             '/" (int|tinyint|smallint|bigint)\([0-9]+\) DEFAULT NULL(,)?\n/',
             '" $1 DEFAULT NULL$2' . "\n",
             $create_query
         );
-        $create_query = preg_replace(
+        $create_query = (string) preg_replace(
             '/" (int|tinyint|smallint|bigint)\([0-9]+\) NOT NULL(,)?\n/',
             '" $1 NOT NULL$2' . "\n",
             $create_query
         );
-        $create_query = preg_replace(
+        $create_query = (string) preg_replace(
             '/" (int|tinyint|smallint|bigint)\([0-9]+\) NOT NULL DEFAULT \'([^\'])/',
             '" $1 NOT NULL DEFAULT \'$2',
             $create_query
@@ -2724,18 +2724,18 @@ class ExportSql extends ExportPlugin
         // '" FLOAT|DOUBLE([0-9,]{1,}) ...,'
         // last preg_replace preserve us from situation with
         // float([0-9,]{1,}) text inside DEFAULT field value
-        $create_query = preg_replace(
+        $create_query = (string) preg_replace(
             '/" (float|double)(\([0-9]+,[0-9,]+\))? DEFAULT NULL(,)?\n/',
             '" float DEFAULT NULL$3' . "\n",
             $create_query
         );
-        $create_query = preg_replace(
+        $create_query = (string) preg_replace(
             '/" (float|double)(\([0-9,]+,[0-9,]+\))? NOT NULL(,)?\n/',
             '" float NOT NULL$3' . "\n",
             $create_query
         );
 
-        return preg_replace(
+        return (string) preg_replace(
             '/" (float|double)(\([0-9,]+,[0-9,]+\))? NOT NULL DEFAULT \'([^\'])/',
             '" float NOT NULL DEFAULT \'$3',
             $create_query
@@ -2905,7 +2905,7 @@ class ExportSql extends ExportPlugin
             || $statement->options->has('VIEW')
         ) {
             // Repalcing the body.
-            for ($i = 0, $count = count($statement->body); $i < $count; ++$i) {
+            for ($i = 0, $count = count((array) $statement->body); $i < $count; ++$i) {
 
                 /**
                  * Token parsed at this moment.

@@ -24,12 +24,14 @@ use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 use Williamdes\MariaDBMySQLKBS\KBException;
 use Williamdes\MariaDBMySQLKBS\Search as KBSearch;
+use const ENT_COMPAT;
 use function addslashes;
 use function array_key_exists;
 use function ceil;
 use function count;
 use function explode;
 use function floor;
+use function htmlentities;
 use function htmlspecialchars;
 use function implode;
 use function in_array;
@@ -394,42 +396,20 @@ class Generator
         $retval = '<option></option>' . "\n";
         // loop on the dropdown array and print all available options for that
         // field.
-        $functions = $GLOBALS['dbi']->types->getFunctions($field['True_Type']);
+        $functions = $GLOBALS['dbi']->types->getAllFunctions();
         foreach ($functions as $function) {
             $retval .= '<option';
             if (isset($foreignData['foreign_link']) && $foreignData['foreign_link'] !== false
-                && $default_function
-                === $function) {
+                && $default_function === $function
+            ) {
                 $retval .= ' selected="selected"';
             }
             $retval .= '>' . $function . '</option>' . "\n";
             $dropdown_built[$function] = true;
         }
 
-        // Create separator before all functions list
-        if (count($functions) > 0) {
-            $retval .= '<option value="" disabled="disabled">--------</option>'
-                . "\n";
-        }
-
-        // For compatibility's sake, do not let out all other functions. Instead
-        // print a separator (blank) and then show ALL functions which weren't
-        // shown yet.
-        $functions = $GLOBALS['dbi']->types->getAllFunctions();
-        foreach ($functions as $function) {
-            // Skip already included functions
-            if (isset($dropdown_built[$function])) {
-                continue;
-            }
-            $retval .= '<option';
-            if ($default_function === $function) {
-                $retval .= ' selected="selected"';
-            }
-            $retval .= '>' . $function . '</option>' . "\n";
-        } // end for
-
         $retval .= '<option value="PHP_PASSWORD_HASH" title="';
-        $retval .= __('The PHP function password_hash() with default options.');
+        $retval .= htmlentities(__('The PHP function password_hash() with default options.'), ENT_COMPAT);
         $retval .= '">' . __('password_hash() PHP function') . '</option>' . "\n";
 
         return $retval;
@@ -745,7 +725,7 @@ class Generator
                             '_blank'
                         ) . '&nbsp;]';
                 }
-            } //show explain
+            }
 
             $url_params['sql_query'] = $sql_query;
             $url_params['show_query'] = 1;
@@ -792,7 +772,7 @@ class Generator
                 }
             } else {
                 $php_link = '';
-            } //show as php
+            }
 
             // Refresh query
             if (! empty($cfg['SQLQuery']['Refresh'])
@@ -804,7 +784,7 @@ class Generator
                     . self::linkOrButton($refresh_link, __('Refresh')) . '&nbsp;]';
             } else {
                 $refresh_link = '';
-            } //refresh
+            }
 
             $retval .= '<div class="sqlOuter">';
             $retval .= $query_base;
@@ -924,7 +904,7 @@ class Generator
 
         // Checking for any server errors.
         if (empty($server_msg)) {
-            $server_msg = $GLOBALS['dbi']->getError();
+            $server_msg = (string) $GLOBALS['dbi']->getError();
         }
 
         // Finding the query that failed, if not specified.
@@ -1031,10 +1011,10 @@ class Generator
 
         // Display server's error.
         if (! empty($server_msg)) {
-            $server_msg = preg_replace(
+            $server_msg = (string) preg_replace(
                 "@((\015\012)|(\015)|(\012)){3,}@",
                 "\n\n",
-                $server_msg
+                (string) $server_msg
             );
 
             // Adds a link to MySQL documentation.

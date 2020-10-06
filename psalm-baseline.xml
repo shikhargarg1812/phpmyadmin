@@ -1,20 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="3.16@d03e5ef057d6adc656c0ff7e166c50b73b4f48f3">
-  <file src="libraries/classes/CentralColumns.php">
-    <InvalidScalarArgument occurrences="1">
-      <code>$tn_pageNow</code>
-    </InvalidScalarArgument>
-    <PossiblyInvalidArgument occurrences="5">
-      <code>$this-&gt;dbi-&gt;getError()</code>
-      <code>$this-&gt;dbi-&gt;getError()</code>
-      <code>$this-&gt;dbi-&gt;getError(DatabaseInterface::CONNECT_CONTROL)</code>
-      <code>$this-&gt;dbi-&gt;getError(DatabaseInterface::CONNECT_CONTROL)</code>
-      <code>$this-&gt;dbi-&gt;getError(DatabaseInterface::CONNECT_CONTROL)</code>
-    </PossiblyInvalidArgument>
-    <TypeDoesNotContainType occurrences="1">
-      <code>$table == ''</code>
-    </TypeDoesNotContainType>
-  </file>
   <file src="libraries/classes/Charsets.php">
     <TypeDoesNotContainType occurrences="1">
       <code>$pieces === false</code>
@@ -100,9 +85,6 @@
       <code>mb_strpos($row, ' ON ')</code>
       <code>mb_strpos($row, ' ON ')</code>
     </PossiblyFalseOperand>
-    <PossiblyInvalidArgument occurrences="1">
-      <code>$this-&gt;dbi-&gt;getError()</code>
-    </PossiblyInvalidArgument>
   </file>
   <file src="libraries/classes/Command/CacheWarmupCommand.php">
     <TooFewArguments occurrences="1">
@@ -211,9 +193,6 @@
     <InvalidArgument occurrences="1">
       <code>$port</code>
     </InvalidArgument>
-    <NullArgument occurrences="1">
-      <code>null</code>
-    </NullArgument>
     <PossiblyFalseArgument occurrences="2">
       <code>$test</code>
       <code>$test</code>
@@ -222,10 +201,6 @@
       <code>$uv[$i]</code>
       <code>$uv[$i]</code>
     </PossiblyInvalidArgument>
-    <PossiblyNullArgument occurrences="2">
-      <code>$pass</code>
-      <code>$socket</code>
-    </PossiblyNullArgument>
   </file>
   <file src="libraries/classes/Controllers/BrowseForeignersController.php">
     <PossiblyNullArgument occurrences="1">
@@ -268,11 +243,6 @@
     <TypeDoesNotContainType occurrences="1">
       <code>$sub_part</code>
     </TypeDoesNotContainType>
-  </file>
-  <file src="libraries/classes/Controllers/Database/RoutinesController.php">
-    <PossiblyNullArgument occurrences="1">
-      <code>$params['type']</code>
-    </PossiblyNullArgument>
   </file>
   <file src="libraries/classes/Controllers/Database/SqlFormatController.php">
     <PossiblyNullArgument occurrences="1">
@@ -390,9 +360,6 @@
     </PossiblyNullIterator>
   </file>
   <file src="libraries/classes/Controllers/Server/DatabasesController.php">
-    <PossiblyInvalidArgument occurrences="1">
-      <code>$this-&gt;dbi-&gt;getError()</code>
-    </PossiblyInvalidArgument>
     <TypeDoesNotContainType occurrences="1">
       <code>(int) $database[$key]</code>
     </TypeDoesNotContainType>
@@ -527,9 +494,8 @@
       <code>$openPos</code>
       <code>$openPos</code>
     </PossiblyFalseOperand>
-    <PossiblyInvalidArgument occurrences="2">
+    <PossiblyInvalidArgument occurrences="1">
       <code>$analyzed_sql_results ?? ''</code>
-      <code>$tmp_error</code>
     </PossiblyInvalidArgument>
     <PossiblyNullArrayAccess occurrences="14">
       <code>$avg_size</code>
@@ -566,15 +532,7 @@
       <code>$keys</code>
     </PossiblyNullArrayOffset>
   </file>
-  <file src="libraries/classes/Controllers/ViewCreateController.php">
-    <PossiblyInvalidArgument occurrences="1">
-      <code>$this-&gt;dbi-&gt;getError()</code>
-    </PossiblyInvalidArgument>
-  </file>
   <file src="libraries/classes/Core.php">
-    <FalsableReturnStatement occurrences="1">
-      <code>getenv($var_name)</code>
-    </FalsableReturnStatement>
     <InvalidOperand occurrences="1">
       <code>$matches[1]</code>
     </InvalidOperand>
@@ -584,13 +542,6 @@
       <code>$i</code>
       <code>$i</code>
     </LoopInvalidation>
-    <PossiblyFalseArgument occurrences="2">
-      <code>mb_strpos($_page . '?', '?')</code>
-      <code>mb_strpos($page . '?', '?')</code>
-    </PossiblyFalseArgument>
-    <PossiblyInvalidArgument occurrences="1">
-      <code>$size</code>
-    </PossiblyInvalidArgument>
     <TypeDoesNotContainType occurrences="1">
       <code>is_string($data)</code>
     </TypeDoesNotContainType>
@@ -599,6 +550,17 @@
     <PossiblyFalseArgument occurrences="1">
       <code>$_POST['field_extra'][$i] ?? false</code>
     </PossiblyFalseArgument>
+  </file>
+  <file src="libraries/classes/Database/CentralColumns.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$tn_pageNow</code>
+    </InvalidScalarArgument>
+    <PossiblyInvalidArgument occurrences="1">
+      <code>$this-&gt;dbi-&gt;getError()</code>
+    </PossiblyInvalidArgument>
+    <TypeDoesNotContainType occurrences="1">
+      <code>$table == ''</code>
+    </TypeDoesNotContainType>
   </file>
   <file src="libraries/classes/Database/DatabaseList.php">
     <PossiblyNullPropertyAssignmentValue occurrences="1">
@@ -856,9 +818,6 @@
     <NullableReturnStatement occurrences="1">
       <code>Util::formatByteDown($value)</code>
     </NullableReturnStatement>
-    <PossiblyInvalidArgument occurrences="1">
-      <code>$formatted_size</code>
-    </PossiblyInvalidArgument>
     <UndefinedConstant occurrences="12">
       <code>PMA_ENGINE_DETAILS_TYPE_NUMERIC</code>
       <code>PMA_ENGINE_DETAILS_TYPE_NUMERIC</code>
@@ -889,14 +848,10 @@
     <InvalidReturnType occurrences="1">
       <code>int</code>
     </InvalidReturnType>
-    <PossiblyInvalidArgument occurrences="2">
+    <PossiblyInvalidArgument occurrences="1">
       <code>$db_select</code>
-      <code>$dump_buffer</code>
     </PossiblyInvalidArgument>
-    <PossiblyNullArgument occurrences="5">
-      <code>$line</code>
-      <code>$line</code>
-      <code>$line</code>
+    <PossiblyNullArgument occurrences="2">
       <code>$line</code>
       <code>$line</code>
     </PossiblyNullArgument>
@@ -914,19 +869,7 @@
     <PossiblyInvalidArgument occurrences="1">
       <code>$_FILES['fields_upload']</code>
     </PossiblyInvalidArgument>
-    <PossiblyNullArgument occurrences="18">
-      <code>$name</code>
-      <code>$this-&gt;getName()</code>
-      <code>$this-&gt;getName()</code>
-      <code>$this-&gt;getName()</code>
-      <code>$this-&gt;getName()</code>
-      <code>$this-&gt;getName()</code>
-      <code>$this-&gt;getName()</code>
-      <code>$this-&gt;getName()</code>
-      <code>$this-&gt;getName()</code>
-      <code>$this-&gt;getName()</code>
-      <code>$this-&gt;getName()</code>
-      <code>$this-&gt;getName()</code>
+    <PossiblyNullArgument occurrences="6">
       <code>$this-&gt;getName()</code>
       <code>$this-&gt;getName()</code>
       <code>$this-&gt;getName()</code>
@@ -1012,10 +955,6 @@
     <PossiblyInvalidArgument occurrences="1">
       <code>count($points_arr) / 2</code>
     </PossiblyInvalidArgument>
-    <PossiblyNullArgument occurrences="2">
-      <code>$label</code>
-      <code>$label</code>
-    </PossiblyNullArgument>
   </file>
   <file src="libraries/classes/Gis/GisPoint.php">
     <InvalidScalarArgument occurrences="2">
@@ -1076,11 +1015,6 @@
       <code>$gitFolder</code>
     </PossiblyNullArgument>
   </file>
-  <file src="libraries/classes/Html/Generator.php">
-    <InvalidScalarArgument occurrences="1">
-      <code>$server_msg</code>
-    </InvalidScalarArgument>
-  </file>
   <file src="libraries/classes/Import.php">
     <InvalidReturnStatement occurrences="1">
       <code>$column_number</code>
@@ -1091,9 +1025,6 @@
     <ParadoxicalCondition occurrences="1">
       <code>$error</code>
     </ParadoxicalCondition>
-    <PossiblyFalseArgument occurrences="1">
-      <code>strpos($last_cumulative_size, ',')</code>
-    </PossiblyFalseArgument>
     <PossiblyFalseOperand occurrences="3">
       <code>$decPos</code>
       <code>strpos($last_cumulative_size, ',')</code>
@@ -1174,7 +1105,7 @@
   </file>
   <file src="libraries/classes/LanguageManager.php">
     <MissingConstructor occurrences="1">
-      <code>$available_locales</code>
+      <code>$availableLocales</code>
     </MissingConstructor>
   </file>
   <file src="libraries/classes/Menu.php">
@@ -1237,16 +1168,6 @@
       <code>$this-&gt;realParent()-&gt;realName</code>
       <code>$this-&gt;realParent()-&gt;realName</code>
     </PossiblyInvalidPropertyFetch>
-  </file>
-  <file src="libraries/classes/Normalization.php">
-    <InvalidArgument occurrences="1">
-      <code>$columnTypeList</code>
-    </InvalidArgument>
-    <PossiblyInvalidArgument occurrences="3">
-      <code>$this-&gt;dbi-&gt;getError()</code>
-      <code>$this-&gt;dbi-&gt;getError()</code>
-      <code>$this-&gt;dbi-&gt;getError()</code>
-    </PossiblyInvalidArgument>
   </file>
   <file src="libraries/classes/OpenDocument.php">
     <InvalidReturnStatement occurrences="1">
@@ -1345,12 +1266,6 @@
       <code>$do_mime</code>
       <code>$do_relation</code>
     </ParamNameMismatch>
-    <PossiblyFalseArgument occurrences="4">
-      <code>$pos</code>
-      <code>$pos</code>
-      <code>$pos</code>
-      <code>$pos</code>
-    </PossiblyFalseArgument>
   </file>
   <file src="libraries/classes/Plugins/Export/ExportMediawiki.php">
     <ParamNameMismatch occurrences="3">
@@ -1401,12 +1316,6 @@
   </file>
   <file src="libraries/classes/Plugins/Export/ExportSql.php">
     <InvalidArgument occurrences="5"/>
-    <PossiblyFalseArgument occurrences="1">
-      <code>mb_strpos($collation, '_')</code>
-    </PossiblyFalseArgument>
-    <PossiblyInvalidArgument occurrences="1">
-      <code>$statement-&gt;body</code>
-    </PossiblyInvalidArgument>
     <PossiblyInvalidOperand occurrences="1"/>
     <PossiblyInvalidPropertyAssignmentValue occurrences="1">
       <code>Context::escape($alias)</code>
@@ -1508,9 +1417,6 @@
       <code>$cell_attrs</code>
       <code>$text</code>
     </InvalidArgument>
-    <PossiblyInvalidArgument occurrences="1">
-      <code>$value</code>
-    </PossiblyInvalidArgument>
     <PossiblyNullArrayAccess occurrences="4">
       <code>$attr['number-columns-repeated']</code>
       <code>$attr['number-columns-repeated']</code>
@@ -1773,9 +1679,9 @@
       <code>$this-&gt;tablewidth</code>
     </PossiblyNullPropertyAssignmentValue>
     <PossiblyNullPropertyFetch occurrences="3">
-      <code>$this-&gt;diagram-&gt;PMA_links</code>
-      <code>$this-&gt;diagram-&gt;PMA_links</code>
-      <code>$this-&gt;diagram-&gt;PMA_links</code>
+      <code>$this-&gt;diagram-&gt;customLinks</code>
+      <code>$this-&gt;diagram-&gt;customLinks</code>
+      <code>$this-&gt;diagram-&gt;customLinks</code>
     </PossiblyNullPropertyFetch>
     <PossiblyNullReference occurrences="92">
       <code>AddLink</code>
@@ -1966,15 +1872,15 @@
       <code>setWidths</code>
     </PossiblyUndefinedMethod>
     <UndefinedPropertyAssignment occurrences="4">
-      <code>$this-&gt;diagram-&gt;PMA_links</code>
-      <code>$this-&gt;diagram-&gt;PMA_links</code>
-      <code>$this-&gt;diagram-&gt;PMA_links</code>
-      <code>$this-&gt;diagram-&gt;PMA_links</code>
+      <code>$this-&gt;diagram-&gt;customLinks</code>
+      <code>$this-&gt;diagram-&gt;customLinks</code>
+      <code>$this-&gt;diagram-&gt;customLinks</code>
+      <code>$this-&gt;diagram-&gt;customLinks</code>
     </UndefinedPropertyAssignment>
     <UndefinedPropertyFetch occurrences="3">
-      <code>$this-&gt;diagram-&gt;PMA_links</code>
-      <code>$this-&gt;diagram-&gt;PMA_links</code>
-      <code>$this-&gt;diagram-&gt;PMA_links</code>
+      <code>$this-&gt;diagram-&gt;customLinks</code>
+      <code>$this-&gt;diagram-&gt;customLinks</code>
+      <code>$this-&gt;diagram-&gt;customLinks</code>
     </UndefinedPropertyFetch>
   </file>
   <file src="libraries/classes/Plugins/Schema/Pdf/TableStatsPdf.php">
@@ -2013,12 +1919,12 @@
       <code>setXyScale</code>
     </PossiblyUndefinedMethod>
     <UndefinedPropertyAssignment occurrences="2">
-      <code>$this-&gt;diagram-&gt;PMA_links</code>
-      <code>$this-&gt;diagram-&gt;PMA_links</code>
+      <code>$this-&gt;diagram-&gt;customLinks</code>
+      <code>$this-&gt;diagram-&gt;customLinks</code>
     </UndefinedPropertyAssignment>
     <UndefinedPropertyFetch occurrences="2">
-      <code>$this-&gt;diagram-&gt;PMA_links</code>
-      <code>$this-&gt;diagram-&gt;PMA_links</code>
+      <code>$this-&gt;diagram-&gt;customLinks</code>
+      <code>$this-&gt;diagram-&gt;customLinks</code>
     </UndefinedPropertyFetch>
   </file>
   <file src="libraries/classes/Plugins/Schema/RelationStats.php">
@@ -2206,10 +2112,6 @@
     <PossiblyFalseOperand occurrences="1">
       <code>mb_strrpos($currentUser, '@')</code>
     </PossiblyFalseOperand>
-    <PossiblyNullArgument occurrences="2">
-      <code>$messageError</code>
-      <code>$messageSuccess</code>
-    </PossiblyNullArgument>
   </file>
   <file src="libraries/classes/SavedSearches.php">
     <PossiblyInvalidArrayOffset occurrences="2">
@@ -2237,9 +2139,6 @@
       <code>$authentication_plugin</code>
       <code>$result['password']</code>
     </NullableReturnStatement>
-    <PossiblyFalseArgument occurrences="1">
-      <code>mb_strpos($export_user, '&amp;')</code>
-    </PossiblyFalseArgument>
     <PossiblyFalseOperand occurrences="6">
       <code>mb_strpos($row1['Type'], '(')</code>
       <code>mb_strpos($row1['Type'], '(')</code>
@@ -2248,14 +2147,8 @@
       <code>mb_strrpos($currentUser, '@')</code>
       <code>mb_strrpos($export_user, ';')</code>
     </PossiblyFalseOperand>
-    <PossiblyInvalidArgument occurrences="7">
+    <PossiblyInvalidArgument occurrences="1">
       <code>$dbname</code>
-      <code>$this-&gt;dbi-&gt;getError()</code>
-      <code>$this-&gt;dbi-&gt;getError()</code>
-      <code>$this-&gt;dbi-&gt;getError()</code>
-      <code>$this-&gt;dbi-&gt;getError()</code>
-      <code>$this-&gt;dbi-&gt;getError()</code>
-      <code>$this-&gt;dbi-&gt;getError()</code>
     </PossiblyInvalidArgument>
     <PossiblyNullArgument occurrences="6">
       <code>$dbname</code>
@@ -2277,12 +2170,6 @@
     <PossiblyUndefinedArrayOffset occurrences="1">
       <code>$_POST['pred_dbname']</code>
     </PossiblyUndefinedArrayOffset>
-  </file>
-  <file src="libraries/classes/Server/Status/Monitor.php">
-    <PossiblyFalseArgument occurrences="1">
-      <code>mb_strpos($row['sql_text'], ' ')</code>
-    </PossiblyFalseArgument>
-    <PossiblyNullArgument occurrences="2"/>
   </file>
   <file src="libraries/classes/Server/SysInfo/SunOs.php">
     <ForbiddenCode occurrences="1">
@@ -2391,17 +2278,11 @@
     <InvalidReturnStatement occurrences="1">
       <code>$table_auto_increment ?? ''</code>
     </InvalidReturnStatement>
-    <PossiblyInvalidArgument occurrences="3">
-      <code>$this-&gt;dbi-&gt;getError(DatabaseInterface::CONNECT_CONTROL)</code>
-      <code>$this-&gt;dbi-&gt;getError(DatabaseInterface::CONNECT_CONTROL)</code>
-      <code>$tmp_error_create</code>
-    </PossiblyInvalidArgument>
-    <PossiblyNullArgument occurrences="5">
+    <PossiblyNullArgument occurrences="4">
       <code>$existrel_foreign[$master_field_md5]['constraint']</code>
       <code>$existrel_foreign[$master_field_md5]['ref_db_name']</code>
       <code>$existrel_foreign[$master_field_md5]['ref_index_list']</code>
       <code>$existrel_foreign[$master_field_md5]['ref_table_name']</code>
-      <code>$target_db</code>
     </PossiblyNullArgument>
     <PossiblyNullArrayAccess occurrences="5">
       <code>$existrel_foreign[$master_field_md5]['constraint']</code>
@@ -2446,8 +2327,7 @@
     <InvalidScalarArgument occurrences="1">
       <code>$cookie_theme</code>
     </InvalidScalarArgument>
-    <PossiblyNullArgument occurrences="2">
-      <code>$theme</code>
+    <PossiblyNullArgument occurrences="1">
       <code>$theme</code>
     </PossiblyNullArgument>
     <PossiblyNullArrayOffset occurrences="1">
@@ -2492,9 +2372,6 @@
       <code>$class_name</code>
       <code>$class_name</code>
     </InvalidArgument>
-    <PossiblyNullArgument occurrences="1">
-      <code>$rtrimmed</code>
-    </PossiblyNullArgument>
   </file>
   <file src="libraries/classes/Twig/I18n/NodeTrans.php">
     <PossiblyNullArgument occurrences="5">
@@ -2521,12 +2398,6 @@
     </PropertyTypeCoercion>
   </file>
   <file src="libraries/classes/Types.php">
-    <InvalidReturnStatement occurrences="1">
-      <code>$ret</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>string[]</code>
-    </InvalidReturnType>
     <PossiblyInvalidArgument occurrences="1">
       <code>$ret[_pgettext('string types', 'String')]</code>
     </PossiblyInvalidArgument>
@@ -2560,9 +2431,8 @@
       <code>mb_strpos($value, '.')</code>
       <code>mb_strrpos($columnspec, ')')</code>
     </PossiblyFalseOperand>
-    <PossiblyInvalidArgument occurrences="2">
+    <PossiblyInvalidArgument occurrences="1">
       <code>$table</code>
-      <code>$value</code>
     </PossiblyInvalidArgument>
     <PossiblyInvalidArrayAccess occurrences="2">
       <code>$group[$group_name]['tab' . $sep . 'count']</code>
@@ -2610,13 +2480,5 @@
     <MoreSpecificReturnType occurrences="1">
       <code>stdClass|null</code>
     </MoreSpecificReturnType>
-    <PossiblyNullArgument occurrences="1">
-      <code>$version</code>
-    </PossiblyNullArgument>
-  </file>
-  <file src="libraries/classes/ZipExtension.php">
-    <PossiblyFalseArgument occurrences="1">
-      <code>$ext_pos</code>
-    </PossiblyFalseArgument>
   </file>
 </files>

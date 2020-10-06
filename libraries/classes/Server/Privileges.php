@@ -2970,7 +2970,7 @@ class Privileges
                 $export_username = mb_substr(
                     $export_user,
                     0,
-                    mb_strpos($export_user, '&')
+                    (int) mb_strpos($export_user, '&')
                 );
                 $export_hostname = mb_substr(
                     $export_user,
@@ -3507,11 +3507,11 @@ class Privileges
         ) {
             $_POST['createdb-1'] = $_POST['createdb-2']
                 = $_POST['createdb-3'] = null;
-            $message = Message::rawError($this->dbi->getError());
+            $message = Message::rawError((string) $this->dbi->getError());
         } elseif ($alter_real_sql_query !== '' && ! $this->dbi->tryQuery($alter_real_sql_query)) {
             $_POST['createdb-1'] = $_POST['createdb-2']
                 = $_POST['createdb-3'] = null;
-            $message = Message::rawError($this->dbi->getError());
+            $message = Message::rawError((string) $this->dbi->getError());
         } else {
             $sql_query .= $alter_sql_query;
             $message = Message::success(__('You have added a new user.'));
@@ -3525,7 +3525,7 @@ class Privileges
                 ) . ';';
             $sql_query .= $q;
             if (! $this->dbi->tryQuery($q)) {
-                $message = Message::rawError($this->dbi->getError());
+                $message = Message::rawError((string) $this->dbi->getError());
             }
 
             /**
@@ -3544,7 +3544,7 @@ class Privileges
                 . '\'@\'' . $this->dbi->escapeString($hostname) . '\';';
             $sql_query .= $q;
             if (! $this->dbi->tryQuery($q)) {
-                $message = Message::rawError($this->dbi->getError());
+                $message = Message::rawError((string) $this->dbi->getError());
             }
         }
 
@@ -3560,7 +3560,7 @@ class Privileges
                 . '\'@\'' . $this->dbi->escapeString($hostname) . '\';';
             $sql_query .= $q;
             if (! $this->dbi->tryQuery($q)) {
-                $message = Message::rawError($this->dbi->getError());
+                $message = Message::rawError((string) $this->dbi->getError());
             }
         }
 
@@ -3574,7 +3574,7 @@ class Privileges
             . '\'@\'' . $this->dbi->escapeString($hostname) . '\';';
             $sql_query .= $q;
             if (! $this->dbi->tryQuery($q)) {
-                $message = Message::rawError($this->dbi->getError());
+                $message = Message::rawError((string) $this->dbi->getError());
             }
         }
 
@@ -3764,7 +3764,8 @@ class Privileges
                 );
             } else {
                 if (! (($serverType === 'MariaDB' && $isMariaDBPwdPluginActive)
-                    || ($serverType === 'MySQL' || $serverType === 'Percona Server') && $serverVersion >= 80011)) {
+                    || ($serverType === 'MySQL' || $serverType === 'Percona Server') && $serverVersion >= 80011)
+                ) {
                     $hashedPassword = $this->getHashedPassword($_POST['pma_pw']);
                 } else {
                     // MariaDB with validation plugin needs cleartext password
