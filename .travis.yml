@@ -68,6 +68,14 @@ jobs:
       after_success: skip
       script: composer psalm
 
+    - stage: "JavaScript Unit Test"
+      name: "Run Jest"
+      before_install: phpenv config-rm xdebug.ini
+      before_script: skip
+      after_script: skip
+      after_success: skip
+      script: yarn test
+
     - stage: "PHP Unit tests"
       php: 7.1
       name: "PHP 7.1"
