@@ -971,3 +971,7 @@ $(document).on('ajaxError', function (event, request) {
         AJAX.xhr = null;
     }
 });
+
+if (typeof exports !== 'undefined') {
+    module.exports = AJAX;
+}

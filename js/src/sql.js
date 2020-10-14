@@ -1088,3 +1088,7 @@ AJAX.registerOnload('sql.js', function () {
  */
 var elements = $('.sticky');
 Stickyfill.add(elements);
+
+if (typeof exports !== 'undefined') {
+    module.exports = Sql;
+}
