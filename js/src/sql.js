@@ -1090,5 +1090,6 @@ var elements = $('.sticky');
 Stickyfill.add(elements);
 
 if (typeof exports !== 'undefined') {
+    /* eslint-env node */
     module.exports = Sql;
 }

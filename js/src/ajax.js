@@ -973,5 +973,6 @@ $(document).on('ajaxError', function (event, request) {
 });
 
 if (typeof exports !== 'undefined') {
+    /* eslint-env node */
     module.exports = AJAX;
 }
